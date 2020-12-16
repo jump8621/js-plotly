@@ -109,6 +109,8 @@ function bubbleChart(value) {
     text: otu_labels,
     marker: {
       color: otuIDs,
+      colorscale: 'Earth',
+      type: 'heatmap',
       opacity: otuIDs.map(id => 0.7),
       size: sample_values
     }

@@ -1,3 +1,18 @@
+
+// d3.json("samples.json").then(function(importedData) {
+//     var data = importedData
+//     Object.entries.forEach(entry => {
+//         append("option")
+
+        
+//     });
+// }
+
+
+
+
+
+
 // function buildGauge(value) {
 
 //     var filteredData = metadata.filter(event => parseInt(event.id) === parseInt(value))[0];
