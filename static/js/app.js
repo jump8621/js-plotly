@@ -66,14 +66,14 @@
 // //importdata is an object- and you can't sort and don't need to sort
 
 //global variable
-// var data
+//var data
 var ids = [];
 var metadata = [];
 var samples = [];
 
-// function init() {
+
 d3.json("samples.json").then(function(data) {
-  //data = importedData;
+ // data = data;
   id = data.names;
   metadata = data.metadata;
   samples = data.samples;
@@ -83,21 +83,29 @@ d3.json("samples.json").then(function(data) {
     option.property("value", id);
     option.text(id);
   })
-  optionChanged(selection.property("value"));
+optionChanged(selection.property("value"));
+
 })
-// }
+function change(value) {
+  console.log(value)
+  optionChanged(value)
+}
+
 
 function optionChanged(value) {
   demographicdata(value)
   Plotbar(value)
   bubbleChart(value)
+  gaugeChart(value)
+  // gaugePointer(value)
 }
 
 function demographicdata(value) {
   
   var filteredData = metadata.filter(event => parseInt(event.id) === parseInt(value))[0];
   console.log(filteredData)
-  console.log(filteredData[0])
+  //console.log(filteredData.ethnicity)
+  //console.log((filteredData[0]))
   var idData = filteredData.id;
   var ethnicity = filteredData.ethnicity;
   var gender = filteredData.gender;
@@ -176,8 +184,8 @@ function bubbleChart(value) {
   var layout = {
     title: '',
     showlegend: false,
-    // height: 600,
-    // width: 900
+    height: 600,
+    width: 1250
   };
   
   Plotly.newPlot('bubble', data, layout);
@@ -185,58 +193,99 @@ function bubbleChart(value) {
 
 function gaugeChart(value) {
 
-  var filteredData = samples.filter(event => parseInt(event.id) === parseInt(value))[0];
-  var sample_values = filteredData.sample_values;
-  var otu_ids = filteredData.otu_ids;
-  var otu_labels = filteredData.otu_labels;
+  var filteredData = metadata.filter(event => parseInt(event.id) === parseInt(value))[0];
+  var wfreq = filteredData.wfreq;
+   
 
-  var trace = {
-    type: gauge,
-    series: [
-      { values: []}
-    ]
-
-
-  }
-
-  var data = [
+  var trace = [
     {
+      domain: { x:[0,1], y: [0,1] },
+      value: wfreq,
       type: "indicator",
-      mode: "gauge+number+delta",
-      value: 420,
-      title: { text: "Speed", font: { size: 24 } },
-      delta: { reference: 400, increasing: { color: "RebeccaPurple" } },
+      mode: "gauge+number",
       gauge: {
-        axis: { range: [null, 500], tickwidth: 1, tickcolor: "darkblue" },
-        bar: { color: "darkblue" },
-        bgcolor: "white",
-        borderwidth: 2,
-        bordercolor: "gray",
+        axis: { range: [null, 9] },
         steps: [
-          { range: [0, 250], color: "cyan" },
-          { range: [250, 400], color: "royalblue" }
+          { range: [0, 3], color: "lightyellow" },
+          { range: [3, 6], color: "yellowgreen" },
+          { range: [6, 9], color: "lightgreen" },
         ],
         threshold: {
           line: { color: "red", width: 4 },
           thickness: 0.75,
-          value: 490
+          value: wfreq,
         }
       }
     }
   ];
-  
-  var layout = {
-    width: 500,
-    height: 400,
-    margin: { t: 25, r: 25, l: 25, b: 25 },
-    paper_bgcolor: "lavender",
-    font: { color: "darkblue", family: "Arial" }
-  };
-  
-  Plotly.newPlot('myDiv', data, layout);
 
-
+  Plotly.newPlot("gauge", trace) 
 }
+
+// function gaugePointer(value){
+//   var degrees = 180 - value,
+//   radius = .5;
+//   var radians = degrees * Math.PI / 180;
+//   var x = radius * Math.cos(radians);
+//   var y = radius * Math.sin(radians);
+  
+//   // Path: may have to change to create a better triangle
+//   var mainPath = 'M -.0 -0.035 L .0 0.035 L ',
+//   pathX = String(x),
+//   space = " ",
+//   pathY = String(y),
+//   pathEnd = " Z";
+//   var path = mainPath.concat(pathX,space,pathY,pathEnd);
+  
+//   return path;
+//  }
+  
+
+
+
+
+
+
+
+
+//   var data = [
+//     {
+//       type: "indicator",
+//       mode: "gauge+number+delta",
+//       value: 420,
+//       title: { text: "Speed", font: { size: 24 } },
+//       delta: { reference: 400, increasing: { color: "RebeccaPurple" } },
+//       gauge: {
+//         axis: { range: [null, 500], tickwidth: 1, tickcolor: "darkblue" },
+//         bar: { color: "darkblue" },
+//         bgcolor: "white",
+//         borderwidth: 2,
+//         bordercolor: "gray",
+//         steps: [
+//           { range: [0, 250], color: "cyan" },
+//           { range: [250, 400], color: "royalblue" }
+//         ],
+//         threshold: {
+//           line: { color: "red", width: 4 },
+//           thickness: 0.75,
+//           value: 490
+//         }
+//       }
+//     }
+//   ];
+  
+//   var layout = {
+//     width: 500,
+//     height: 400,
+//     margin: { t: 25, r: 25, l: 25, b: 25 },
+//     paper_bgcolor: "lavender",
+//     font: { color: "darkblue", family: "Arial" }
+//   };
+  
+//   Plotly.newPlot('gauge', data, layout);
+
+
+// }
 // init
     // metadata.forEach(metadata=> {
     //   var option = selection.append("option");
